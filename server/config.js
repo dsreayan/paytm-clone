@@ -1,4 +1,4 @@
-JWT_SECRET = "sreayan"
-module.exports={
-    JWT_SECRET
+//backend/config.js
+module.exports = {
+	JWT_SECRET: "your-jwt-secret"
 }

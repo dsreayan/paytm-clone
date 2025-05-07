@@ -3,7 +3,7 @@ const zod = require('zod');
 const userRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = require("../config");
-const {User} = require('../db');
+const {User, Account} = require('../db');
 const { authMiddleware } = require('../middleware');
 
 
@@ -32,6 +32,16 @@ userRouter.post("/signup",async(req,res)=>{
     }
 
     const dbUser = await User.create(body);
+
+    ///// add dummy balance before you return the jwt
+
+    const userId = user._id;
+
+    await Account.create({
+        userId,
+        balance: 1+Math.random()*10000
+    })
+
     const token = jwt.sign({
         userId:dbUser._id
     },JWT_SECRET)
@@ -97,7 +107,7 @@ userRouter.put("/",authMiddleware,async(req,res)=>{
         message:"Updated succesfully."
     })
 })
-///////////////////////////
+//////////////////////////////////////////////////////
 
 userRouter.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
